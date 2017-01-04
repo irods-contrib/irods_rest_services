@@ -1,26 +1,72 @@
-# irods_rest_services
+# iRODS Rest Services
 
-\# of repositories = service x language + 1
+Repository for Swagger API Specifications for iRODS related REST services
+
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+
+### Prerequisites
+
+What things you need to install the software and how to install them
 
 ```
-irods-contrib/irods_rest_services
-  base.yaml
-  metadata_templates.yaml
-  virtual_collections.yaml
-
-irods-contrib/irods_rest_service_base_c++
-irods-contrib/irods_rest_service_metadata_templates_c++
-irods-contrib/irods_rest_service_virtual_collections_c++
-
-irods-contrib/irods_rest_service_base_go
-irods-contrib/irods_rest_service_metadata_templates_go
-irods-contrib/irods_rest_service_virtual_collections_go
-
-irods-contrib/irods_rest_service_base_java
-irods-contrib/irods_rest_service_metadata_templates_java
-irods-contrib/irods_rest_service_virtual_collections_java
-
-irods-contrib/irods_rest_service_base_python
-irods-contrib/irods_rest_service_metadata_templates_python
-irods-contrib/irods_rest_service_virtual_collections_python
+Give examples
 ```
+
+### Installing
+
+A step by step series of examples that tell you have to get a development env running
+
+Say what the step will be
+
+```
+Give the example
+```
+
+And repeat
+
+```
+until finished
+```
+
+End with an example of getting some data out of the system or using it for a little demo
+
+## Running the tests
+
+Explain how to run the automated tests for this system
+
+### Break down into end to end tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+### And coding style tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+## Deployment
+
+Add additional notes about how to deploy this on a live system
+
+## Built With
+
+## Contributing
+
+
+## Authors
+
+## License
+
+iRODS is released under a 3-clause BSD License.
+
+## Acknowledgments
+
+
