@@ -1,9 +1,8 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
   description: |
     A blob of imported code to get us started
-
-  version: "1.0.0"
+  version: 1.0.0
   title: iRODS REST Services Base
   contact:
     name: michael_conway@unc.edu
@@ -12,29 +11,52 @@ basePath: /v1
 schemes:
   - https
 paths:
-  /analysis:
-    post:
+  '/collection/{absoluteLogicalPath}/info':
+    get:
       tags:
-        - apps
-      summary: Launch an analysis through the gateway
-      description: ""
-      operationId: launchAnalysis
-      consumes:
-        - application/json
-        - application/xml
+        - files
+        - browsing
+      summary: List catalog info for the collection
+      description: 'List system metadata for the given iRODS collection. This is the catalog metadata for the collection itself, rather than a listing of the children of the collection'
+      operationId: collectionInfo
       produces:
         - application/json
         - application/xml
       parameters:
-        - in: body
-          name: body
-          description: Analysis request specifying operation and parameters
+        - name: absoluteLogicalPath
+          in: path
+          description: Absolute path to the collection in iRODS
           required: true
-          schema:
-            $ref: "#/definitions/AnalysisRequest"
+          type: string
+        - name: brief
+          in: query
+          description: Request a full listing of collection information, including gathering metadata and extended attributes, by setting brief to false.
+          required: false
+          default: true
+          type: boolean
       responses:
-        "405":
-          description: Invalid input
+        '404':
+          description: Collection not found
+  '/collection/{absoluteLogicalPath}':
+    get:
+      tags:
+        - files
+        - browsing
+      summary: Do listings of the contents of iRODS collections
+      description: 'List children of the given iRODS parent collection.  This is a pagable representation of the direct children of this iRODS parent collection, rather than a recursive listing of the entire subtree'
+      operationId: collectionListing
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - name: absoluteLogicalPath
+          in: path
+          description: Absolute path to the collection in iRODS
+          required: true
+          type: string
+      responses:
+        '404':
+          description: Collection not found
 definitions:
   AnalysisRequest:
     type: object
@@ -51,7 +73,9 @@ definitions:
         description: target location for staging of outputs
       createOutputSubdir:
         type: boolean
-        description: indicates whether a separate subdirectory should be created to hold the output
+        description: >-
+          indicates whether a separate subdirectory should be created to hold
+          the output
       archiveLogs:
         type: boolean
         description: indicates whether log files should be staged back as output
@@ -60,7 +84,5 @@ definitions:
         description: whether to add debug info to the app
       config:
         type: object
-        additionalProperties: 
+        additionalProperties:
           type: string
-
-    
