@@ -1,7 +1,8 @@
 swagger: '2.0'
 info:
   description: |
-    A blob of imported code to get us started
+    Base iRODS REST API - including access to primary iRODS user functions like accessing data and metadata,
+    setting acls, running queries
   version: 1.0.0
   title: iRODS REST Services Base
   contact:
@@ -30,13 +31,17 @@ paths:
           type: string
         - name: brief
           in: query
-          description: Request a full listing of collection information, including gathering metadata and extended attributes, by setting brief to false.
+          description: 'Request a full listing of collection information, including gathering metadata and extended attributes, by setting brief to false.'
           required: false
           default: true
           type: boolean
       responses:
-        '404':
-          description: Collection not found
+          200:
+            description: 'A detailed description of the catalog and other metadata about the collection'
+            schema:
+              $ref: '#/definitions/CollectionInfo'
+          404:
+            description: Collection information not found
   '/collection/{absoluteLogicalPath}':
     get:
       tags:
@@ -57,32 +62,55 @@ paths:
       responses:
         '404':
           description: Collection not found
-definitions:
-  AnalysisRequest:
-    type: object
+definitions: 
+  CollectionInfo:
+    type: object 
     properties:
-      appId:
-        type: string
-        format: string
-        description: uuid of the app
-      name:
-        type: string
-        description: display name for the app in notifications and in display
-      outputDir:
-        type: string
-        description: target location for staging of outputs
-      createOutputSubdir:
+      file:
         type: boolean
-        description: >-
-          indicates whether a separate subdirectory should be created to hold
-          the output
-      archiveLogs:
+        format: boolean
+        description: true if this is a file
+      id:
+        type: integer
+        description: unique id of the collection
+      absolutePath:
+        type: string
+        description: absoluteIrodsPath
+      lastPathComponent:
+        type: string
+        description: 'the last part of the collection path, which is the display name of the actual collection being viewed'
+      collectionParentAbsolutePath:
+        type: string
+        description: 'fully qualified absolute path, with no trailing slash, of the parent of the given collection'
+      collectionOwnerName:
+        type: string
+        description: 'iRODS user name of the owner of the collection'
+      collectionOwnerZone:
+        type: string
+        description: 'iRODS zone of the owner of the collection'
+      inheritance:
         type: boolean
-        description: indicates whether log files should be staged back as output
-      debug:
-        type: boolean
-        description: whether to add debug info to the app
-      config:
-        type: object
-        additionalProperties:
+        description: 'indicates whether permissions are inherited by child objects'
+      createdDate:
+        type: string
+        format: dateTime
+        description: 'date-time when collection was created'
+      modifiedDate:
+        type: string
+        format: dateTime
+        description: 'date-time when collection was last modified'
+  Avu:
+      type: object
+      properties:
+        attribute:
           type: string
+          description: 'avu attribute part'
+        value:
+          type: string
+          description: 'avu value part'
+        unit:
+          type: string
+          description: 'avu unit part'
+        
+      
+   
