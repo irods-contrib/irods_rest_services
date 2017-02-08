@@ -82,6 +82,11 @@ definitions:
       collectionParentAbsolutePath:
         type: string
         description: 'fully qualified absolute path, with no trailing slash, of the parent of the given collection'
+      pathComponents:
+        type: array
+        description: array of path components without slashes
+        items:
+          $ref: "#/definitions/PathComponent"
       collectionOwnerName:
         type: string
         description: 'iRODS user name of the owner of the collection'
@@ -99,6 +104,27 @@ definitions:
         type: string
         format: dateTime
         description: 'date-time when collection was last modified'
+      starred:
+        type: boolean
+        description: indicates if the collection was starred by the user
+      shared:
+        type: boolean
+        description: indicates that the collection has been shared by the user
+      tags:
+        type: array
+        description: User defined tags
+        items:
+          $ref: "#/definitions/Tag"
+      avus:
+        type: array
+        description: Raw AVU metadata
+        items:
+          $ref: "#/definitions/Avu"
+      acls:
+        type: array
+        description: User permissions
+        items:
+          $ref: "#/definitions/Acl"
   Avu:
       type: object
       properties:
@@ -111,6 +137,40 @@ definitions:
         unit:
           type: string
           description: 'avu unit part'
+  Acl:
+    type: object
+    properties:
+      userName:
+        type: string
+        description: User name in the given zone that has the permission
+      userZone:
+        type: string
+        description: User zone for this user that has the permission
+      userId:
+        type: integer
+        description: Unique id of the user
+      userType:
+        type: string
+        description: Type of user (rodsadmin | rodsuser)
+      permission:
+        type: string
+        description: Level of permission (OWN | WRITE | READ)
+  Tag:
+    type: object
+    properties:
+      userName:
+        type: string
+        description: User name that created tag (will include user#zone)
+      tagData:
+        type: string
+        description: Actual tag applied by the given user
+  PathComponent:
+    type: object
+    properties:
+      parthPart:
+        type: string
+        description: part of a path
+
         
       
    
