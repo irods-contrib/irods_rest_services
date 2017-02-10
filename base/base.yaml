@@ -11,6 +11,12 @@ host: irods.org
 basePath: /v1
 schemes:
   - https
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
+security:
+  - basicAuth: []
 paths:
   '/collection/{absoluteLogicalPath}/info':
     get:
@@ -62,9 +68,9 @@ paths:
       responses:
         '404':
           description: Collection not found
-definitions: 
+definitions:
   CollectionInfo:
-    type: object 
+    type: object
     properties:
       file:
         type: boolean
