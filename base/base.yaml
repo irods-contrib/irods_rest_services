@@ -18,6 +18,21 @@ securityDefinitions:
 security:
   - basicAuth: []
 paths:
+  '/server/ping':
+    get:
+      tags:
+        - status
+      summary: Get a ping back from the server
+      description: 'Call iRODS as an authorized user and get back a simple ping response'
+      operationId: server
+      produces:
+        - application/json
+        - application/xml
+      responses:
+          200:
+            description: 'Successful ping, containing info on how long it too the REST backend to connect to iRODS'
+            schema:
+              $ref: '#/definitions/Ping'
   '/collection/{absoluteLogicalPath}/info':
     get:
       tags:
@@ -176,6 +191,13 @@ definitions:
       parthPart:
         type: string
         description: part of a path
+  Ping:
+    type: object
+    properties:
+      pingTime:
+        type: number
+        format: float
+        description: milliseconds to connect to iRODS and get a response from the perspective of the mid-tier service
 
         
       
