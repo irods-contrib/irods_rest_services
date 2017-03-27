@@ -1,0 +1,112 @@
+swagger: "2.0"
+info:
+  description: |
+    Metadata templates Rest API
+  version: "1.0.0"
+  title: Metadata Templates Service API
+  contact:
+    name: michael_conway@unc.edu
+host: renci.org
+basePath: /v1
+schemes:
+  - https
+paths:
+  /templates/public:
+    get:
+      tags:
+        - query
+      summary: List publicly available metadata templates
+      description: "List all publicly available metadata templates in the configured public repo"
+      operationId: listPublicTemplates
+      produces:
+        - application/json
+        - application/xml
+      responses:
+          200:
+            description: 'List of metadata templates retrieved'
+            schema:
+              $ref: '#/definitions/MetadataTemplateList'
+definitions:
+  MetadataTemplateList:
+    type: object
+    properties:
+       metadataTemplate:
+        type: array
+        description: Metadata Template
+        items:
+          $ref: "#/definitions/MetadataTemplate"
+  MetadataTemplate:
+    type: object
+    required:
+      - uuid
+      - name
+      - created
+      - modified
+      - type
+      - destination
+      - required
+      - metadataTemplateElements
+    properties:
+      uuid:
+          type: string
+          description: 'uuid for the tamplate'
+      name:
+          type: string
+          description: display name of the template
+      description:
+          type: string
+          description: free form description
+      author:
+          type: string
+          description: author of metadata template
+      created:
+          type: string
+          format: date-time
+          description: create date of template  
+      modified:
+          type: string
+          format: date-time
+          description: modification date of template  
+      version:
+          type: string
+          description: optional version number
+      type:
+          description: functional type of metadata template (e.g. form versus automatic)
+          type: array
+          items: 
+              type: string
+              enum:
+                - FORM_BASED
+                - GENERATED
+      destination:
+          description: disposition of metadata created by template
+          type: array
+          items: 
+              type: string
+              enum:
+                - IRODS
+      required:
+          description: indicates whether entry of this metadata is required
+          type: boolean
+      metadataTemplateElements:
+        type: array
+        description: Metadata Template Elements
+        items:
+          $ref: "#/definitions/MetadataTemplateElement"
+  MetadataTemplateElement:
+    type: object
+    required:
+      - uuid
+      - name
+    properties:
+      uuid:
+          type: string
+          description: uuid for the element
+      name:
+          type: string
+          description: display name of the element
+      description:
+          type: string
+          description: free form description
+
+      
