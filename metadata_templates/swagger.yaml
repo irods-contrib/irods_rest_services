@@ -98,6 +98,11 @@ definitions:
     required:
       - uuid
       - name
+      - i18nName
+      - description
+      - i18nDescription
+      - required
+      - elementType
     properties:
       uuid:
           type: string
@@ -105,8 +110,56 @@ definitions:
       name:
           type: string
           description: display name of the element
+      i18nName:
+          type: string
+          description: display name of the element as an internationalized property
       description:
           type: string
-          description: free form description
-
+          description: free form description in English for user prompt
+      i18nDescription:
+          type: string
+          description: free form description as an internationalized property
+      required:
+          type: boolean
+          description: if set this element is required in the template
+      elementType:
+          description: describes the data type the element contains, for validation and UI hints
+          type: array
+          items: 
+              type: string
+              enum:
+                - RAW_STRING
+                - RAW_TEXT
+                - RAW_URL 
+                - RAW_INT
+                - RAW_FLOAT
+                - RAW_BOOLEAN
+                - RAW_DATE
+                - RAW_TIME
+                - RAW_DATETIME
+                - REF_IRODS_QUERY
+                - REF_IRODS_CATALOG
+                - REF_URL
+                - LIST_STRING
+                - LIST_INT
+                - LIST_FLOAT
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
       
