@@ -103,6 +103,7 @@ definitions:
       - i18nDescription
       - required
       - elementType
+      - validationStyle
     properties:
       uuid:
           type: string
@@ -143,13 +144,38 @@ definitions:
                 - LIST_STRING
                 - LIST_INT
                 - LIST_FLOAT
-  
-  
-  
-  
-  
-  
-  
+      validationStyle:
+          description: describes how validation will be done on the element
+          type: array
+          items: 
+              type: string
+              enum:
+                - DEFAULT
+                - IS
+                - IN_LIST
+                - IN_RANGE
+                - IN_RANGE_EXCLUSIVE
+                - REGEX
+                - FOLLOW_REF
+                - DO_NOT_VALIDATE
+      validationOptions:
+          type: array
+          description: additional validation information allowing specification of the options for an element.  For example, these can be shown in a drop down list of the element must be in-list
+          items:
+            type: string
+      defaultValue:
+          type: array
+          description: defines the default value for this element. Ref query dot notation appears here, signaling the default will be derived from information held elsewhere in the catalog
+          items:
+            type: string   
+      currentValue:
+          type: array
+          description: defines the current value of this element in a retrieved and resolved instance of the metadata template. That is, after a merge of templates and stored metadata values is done
+          items:
+            type: string   
+      
+      
+ 
   
   
   
