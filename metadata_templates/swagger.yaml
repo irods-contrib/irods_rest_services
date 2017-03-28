@@ -56,8 +56,8 @@ definitions:
         type: array
         description: Metadata Template
         items:
-          $ref: "#/definitions/MetadataTemplate"
-  MetadataTemplate:
+          $ref: "#/definitions/RestMetadataTemplate"
+  RestMetadataTemplate:
     type: object
     required:
       - uuid
@@ -114,8 +114,8 @@ definitions:
         type: array
         description: Metadata Template Elements
         items:
-          $ref: "#/definitions/MetadataTemplateElement"
-  MetadataTemplateElement:
+          $ref: "#/definitions/RestMetadataTemplateElement"
+  RestMetadataTemplateElement:
     type: object
     required:
       - uuid
