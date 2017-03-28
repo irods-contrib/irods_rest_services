@@ -11,6 +11,28 @@ basePath: /v1
 schemes:
   - https
 paths:
+  /server/ping:
+    get:
+      tags:
+        - status
+      summary: Get a ping back from the server
+      description: 'Call iRODS as an authorized user and get back a simple ping response'
+      operationId: server
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - name: midTierOnly
+          in: query
+          description: causes ping to only reach the REST mid tier and not query the back-end, provides a simple heartbeat of the mid-tier.  By default a ping will talk to the back end iRODS server
+          required: false
+          default: false
+          type: boolean
+      responses:
+          200:  
+            description: 'Successful ping, containing info on how long it too the REST backend to connect to iRODS'
+            schema:
+                $ref: '#/definitions/Ping'
   /templates/public:
     get:
       tags:
@@ -173,7 +195,14 @@ definitions:
           description: defines the current value of this element in a retrieved and resolved instance of the metadata template. That is, after a merge of templates and stored metadata values is done
           items:
             type: string   
-      
+  Ping:
+    type: object
+    properties:
+      pingTime:
+        type: number
+        format: float
+        description: milliseconds to connect to iRODS and get a response from the perspective of the mid-tier service
+     
       
  
   
