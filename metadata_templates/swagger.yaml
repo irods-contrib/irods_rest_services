@@ -37,6 +37,7 @@ paths:
     get:
       tags:
         - query
+        - template management
       summary: List publicly available metadata templates
       description: "List all publicly available metadata templates in the configured public repo"
       operationId: listPublicTemplates
@@ -48,6 +49,33 @@ paths:
             description: 'List of metadata templates retrieved'
             schema:
               $ref: '#/definitions/MetadataTemplateList'
+    post:
+      tags:
+        - template management
+      summary: Add a public metadata template
+      description: "Add a metadata template to the public directory"
+      operationId: addPublicTemplate
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: body
+          description: Metadata template to be added
+          required: true
+          schema:
+            $ref: "#/definitions/RestMetadataTemplate"
+         
+      responses:
+        "201":
+          description: Indicates the metadata template was created
+          headers:
+            Location:
+              description: Returns url of newly created metadata template
+              type: string
 definitions:
   MetadataTemplateList:
     type: object
