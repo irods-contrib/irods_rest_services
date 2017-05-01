@@ -111,11 +111,9 @@ definitions:
           description: author of metadata template
       created:
           type: string
-          format: date-time
           description: create date of template  
       modified:
           type: string
-          format: date-time
           description: modification date of template  
       version:
           type: string
