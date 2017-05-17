@@ -1,8 +1,8 @@
-swagger: "2.0"
+swagger: '2.0'
 info:
   description: |
     Metadata templates Rest API
-  version: "1.0.0"
+  version: 1.0.0
   title: Metadata Templates Service API
   contact:
     name: michael_conway@unc.edu
@@ -16,7 +16,7 @@ paths:
       tags:
         - status
       summary: Get a ping back from the server
-      description: 'Call iRODS as an authorized user and get back a simple ping response'
+      description: Call iRODS as an authorized user and get back a simple ping response
       operationId: server
       produces:
         - application/json
@@ -24,36 +24,43 @@ paths:
       parameters:
         - name: midTierOnly
           in: query
-          description: causes ping to only reach the REST mid tier and not query the back-end, provides a simple heartbeat of the mid-tier.  By default a ping will talk to the back end iRODS server
+          description: >-
+            causes ping to only reach the REST mid tier and not query the
+            back-end, provides a simple heartbeat of the mid-tier.  By default a
+            ping will talk to the back end iRODS server
           required: false
           default: false
           type: boolean
       responses:
-          200:  
-            description: 'Successful ping, containing info on how long it too the REST backend to connect to iRODS'
-            schema:
-                $ref: '#/definitions/Ping'
+        '200':
+          description: >-
+            Successful ping, containing info on how long it too the REST backend
+            to connect to iRODS
+          schema:
+            $ref: '#/definitions/Ping'
   /templates/public:
     get:
       tags:
         - query
         - template management
       summary: List publicly available metadata templates
-      description: "List all publicly available metadata templates in the configured public repo"
+      description: >-
+        List all publicly available metadata templates in the configured public
+        repo
       operationId: listPublicTemplates
       produces:
         - application/json
         - application/xml
       responses:
-          200:
-            description: 'List of metadata templates retrieved'
-            schema:
-              $ref: '#/definitions/MetadataTemplateList'
+        '200':
+          description: List of metadata templates retrieved
+          schema:
+            $ref: '#/definitions/MetadataTemplateList'
     post:
       tags:
         - template management
       summary: Add a public metadata template
-      description: "Add a metadata template to the public directory"
+      description: Add a metadata template to the public directory
       operationId: addPublicTemplate
       consumes:
         - application/json
@@ -67,24 +74,110 @@ paths:
           description: Metadata template to be added
           required: true
           schema:
-            $ref: "#/definitions/RestMetadataTemplate"
-         
+            $ref: '#/definitions/RestMetadataTemplate'
       responses:
-        "201":
+        '201':
           description: Indicates the metadata template was created
           headers:
             Location:
               description: Returns url of newly created metadata template
               type: string
+  /templates/available:
+    get:
+      tags:
+        - query
+        - template management
+      summary: List all available metadata templates
+      description: List all available metadata templates
+      operationId: listAvailableTemplates
+      produces:
+        - application/json
+        - application/xml
+      responses:
+        '200':
+          description: List of metadata templates retrieved
+          schema:
+            $ref: '#/definitions/MetadataTemplateList'
+  /templates/boundToPath:
+    parameters:
+      - name: irodsPath
+        in: query
+        description: The path to be used in the query
+        required: true
+        type: string
+    get:
+      tags:
+        - query
+        - template management
+      summary: List all metadata templates bound to the given path
+      description: List all metadata templates bound to the given path
+      operationId: listAllTemplatesBoundToPath
+      produces:
+        - application/json
+        - application/xml
+      responses:
+        '200':
+          description: List of metadata templates retrieved
+          schema:
+            $ref: '#/definitions/MetadataTemplateList'
+  '/templates/{templateUuid}':
+    parameters:
+      - name: templateUuid
+        in: path
+        description: The UUID of the metadata template
+        required: true
+        type: string
+    get:
+      tags:
+        - query
+        - template management
+      summary: Retrieve the metadata template specified by UUID
+      description: Retrieve the metadata template specified by UUID
+      operationId: findTemplateByUuid
+      produces:
+        - application/json
+        - application/xml
+      responses:
+        '200':
+          description: Metadata template retrieved
+          schema:
+            $ref: '#/definitions/RestMetadataTemplate'
+  /templates/findByName:
+    parameters:
+      - name: templateName
+        in: query
+        description: The name of the metadata template
+        required: true
+        type: string
+      - name: locationType
+        in: query
+        description: Where to look for the metadata template
+        required: false
+        type: string
+    get:
+      tags:
+        - query
+        - template management
+      summary: Retrieve the metadata template specified by templateName
+      description: Retrieve the metadata template specified by name
+      operationId: findTemplateByName
+      produces:
+        - application/json
+        - application/xml
+      responses:
+        '200':
+          description: Metadata template retrieved
+          schema:
+            $ref: '#/definitions/RestMetadataTemplate'
 definitions:
   MetadataTemplateList:
     type: object
     properties:
-       metadataTemplate:
+      metadataTemplate:
         type: array
         description: Metadata Template
         items:
-          $ref: "#/definitions/RestMetadataTemplate"
+          $ref: '#/definitions/RestMetadataTemplate'
   RestMetadataTemplate:
     type: object
     required:
@@ -98,49 +191,49 @@ definitions:
       - metadataTemplateElements
     properties:
       uuid:
-          type: string
-          description: 'uuid for the tamplate'
+        type: string
+        description: uuid for the tamplate
       name:
-          type: string
-          description: display name of the template
+        type: string
+        description: display name of the template
       description:
-          type: string
-          description: free form description
+        type: string
+        description: free form description
       author:
-          type: string
-          description: author of metadata template
+        type: string
+        description: author of metadata template
       created:
-          type: string
-          description: create date of template  
+        type: string
+        description: create date of template
       modified:
-          type: string
-          description: modification date of template  
+        type: string
+        description: modification date of template
       version:
-          type: string
-          description: optional version number
+        type: string
+        description: optional version number
       type:
-          description: functional type of metadata template (e.g. form versus automatic)
-          type: array
-          items: 
-              type: string
-              enum:
-                - FORM_BASED
-                - GENERATED
+        description: functional type of metadata template (e.g. form versus automatic)
+        type: array
+        items:
+          type: string
+          enum:
+            - FORM_BASED
+            - GENERATED
       destination:
-          description: disposition of metadata created by template
-          type: array
-          items: 
-              type: string
-              enum:
-                - IRODS
+        description: disposition of metadata created by template
+        type: array
+        items:
+          type: string
+          enum:
+            - IRODS
       required:
-          description: indicates whether entry of this metadata is required
-          type: boolean
+        description: indicates whether entry of this metadata is required
+        type: boolean
       metadataTemplateElements:
         type: array
         description: Metadata Template Elements
         items:
-          $ref: "#/definitions/RestMetadataTemplateElement"
+          $ref: '#/definitions/RestMetadataTemplateElement'
   RestMetadataTemplateElement:
     type: object
     required:
@@ -154,93 +247,90 @@ definitions:
       - validationStyle
     properties:
       uuid:
-          type: string
-          description: uuid for the element
+        type: string
+        description: uuid for the element
       name:
-          type: string
-          description: display name of the element
+        type: string
+        description: display name of the element
       i18nName:
-          type: string
-          description: display name of the element as an internationalized property
+        type: string
+        description: display name of the element as an internationalized property
       description:
-          type: string
-          description: free form description in English for user prompt
+        type: string
+        description: free form description in English for user prompt
       i18nDescription:
-          type: string
-          description: free form description as an internationalized property
+        type: string
+        description: free form description as an internationalized property
       required:
-          type: boolean
-          description: if set this element is required in the template
+        type: boolean
+        description: if set this element is required in the template
       elementType:
-          description: describes the data type the element contains, for validation and UI hints
-          type: array
-          items: 
-              type: string
-              enum:
-                - RAW_STRING
-                - RAW_TEXT
-                - RAW_URL 
-                - RAW_INT
-                - RAW_FLOAT
-                - RAW_BOOLEAN
-                - RAW_DATE
-                - RAW_TIME
-                - RAW_DATETIME
-                - REF_IRODS_QUERY
-                - REF_IRODS_CATALOG
-                - REF_URL
-                - LIST_STRING
-                - LIST_INT
-                - LIST_FLOAT
+        description: >-
+          describes the data type the element contains, for validation and UI
+          hints
+        type: array
+        items:
+          type: string
+          enum:
+            - RAW_STRING
+            - RAW_TEXT
+            - RAW_URL
+            - RAW_INT
+            - RAW_FLOAT
+            - RAW_BOOLEAN
+            - RAW_DATE
+            - RAW_TIME
+            - RAW_DATETIME
+            - REF_IRODS_QUERY
+            - REF_IRODS_CATALOG
+            - REF_URL
+            - LIST_STRING
+            - LIST_INT
+            - LIST_FLOAT
       validationStyle:
-          description: describes how validation will be done on the element
-          type: array
-          items: 
-              type: string
-              enum:
-                - DEFAULT
-                - IS
-                - IN_LIST
-                - IN_RANGE
-                - IN_RANGE_EXCLUSIVE
-                - REGEX
-                - FOLLOW_REF
-                - DO_NOT_VALIDATE
+        description: describes how validation will be done on the element
+        type: array
+        items:
+          type: string
+          enum:
+            - DEFAULT
+            - IS
+            - IN_LIST
+            - IN_RANGE
+            - IN_RANGE_EXCLUSIVE
+            - REGEX
+            - FOLLOW_REF
+            - DO_NOT_VALIDATE
       validationOptions:
-          type: array
-          description: additional validation information allowing specification of the options for an element.  For example, these can be shown in a drop down list of the element must be in-list
-          items:
-            type: string
+        type: array
+        description: >-
+          additional validation information allowing specification of the
+          options for an element.  For example, these can be shown in a drop
+          down list of the element must be in-list
+        items:
+          type: string
       defaultValue:
-          type: array
-          description: defines the default value for this element. Ref query dot notation appears here, signaling the default will be derived from information held elsewhere in the catalog
-          items:
-            type: string   
+        type: array
+        description: >-
+          defines the default value for this element. Ref query dot notation
+          appears here, signaling the default will be derived from information
+          held elsewhere in the catalog
+        items:
+          type: string
       currentValue:
-          type: array
-          description: defines the current value of this element in a retrieved and resolved instance of the metadata template. That is, after a merge of templates and stored metadata values is done
-          items:
-            type: string   
+        type: array
+        description: >-
+          defines the current value of this element in a retrieved and resolved
+          instance of the metadata template. That is, after a merge of templates
+          and stored metadata values is done
+        items:
+          type: string
   Ping:
     type: object
     properties:
       pingTime:
         type: number
         format: float
-        description: milliseconds to connect to iRODS and get a response from the perspective of the mid-tier service
-     
-      
- 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-      
+        description: >-
+          milliseconds to connect to iRODS and get a response from the
+          perspective of the mid-tier service
