@@ -26,16 +26,14 @@ paths:
           in: query
           description: >-
             causes ping to only reach the REST mid tier and not query the
-            back-end, provides a simple heartbeat of the mid-tier.  By default a
-            ping will talk to the back end iRODS server
+            back-end, provides a simple heartbeat of the mid-tier.  By default a ping will talk to the back end iRODS server
           required: false
           default: false
           type: boolean
       responses:
         '200':
           description: >-
-            Successful ping, containing info on how long it too the REST backend
-            to connect to iRODS
+            Successful ping, containing info on how long it took the REST backend to connect to iRODS
           schema:
             $ref: '#/definitions/Ping'
   /templates/public:
@@ -45,8 +43,7 @@ paths:
         - template management
       summary: List publicly available metadata templates
       description: >-
-        List all publicly available metadata templates in the configured public
-        repo
+        List all publicly available metadata templates in the configured public repo
       operationId: listPublicTemplates
       produces:
         - application/json
@@ -120,7 +117,7 @@ paths:
           description: List of metadata templates retrieved
           schema:
             $ref: '#/definitions/MetadataTemplateList'
-  '/templates/{templateUuid}':
+  /templates/{templateUuid}:
     parameters:
       - name: templateUuid
         in: path
@@ -142,6 +139,44 @@ paths:
           description: Metadata template retrieved
           schema:
             $ref: '#/definitions/RestMetadataTemplate'
+    delete:
+      tags:
+        - template management
+      summary: Delete the metadata template specified by UUID
+      description: Delete the metadata template specified by UUID
+      operationId: deleteTemplate
+      produces:
+        - application/json
+        - application/xml
+      responses:
+        '204':
+          description: Metadata template deleted
+    put:
+      tags:
+        - template management
+      summary: Update the metadata template specified by UUID
+      description: Update the metadata template specified by UUID
+      operationId: updateTemplate
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: body
+          description: Metadata template to be added
+          required: true
+          schema:
+            $ref: '#/definitions/RestMetadataTemplate'
+      responses:
+        '201':
+          description: Indicates the metadata template was updated
+          headers:
+            Location:
+              description: Returns url of updated metadata template
+              type: string
   /templates/findByName:
     parameters:
       - name: templateName
@@ -169,6 +204,172 @@ paths:
           description: Metadata template retrieved
           schema:
             $ref: '#/definitions/RestMetadataTemplate'
+  /resolver/bindTemplateToPath:
+    parameters:
+      - name: irodsPath
+        in: query
+        description: The path to which the template will be bound
+        required: true
+        type: string
+      - name: templateUuid
+        in: query
+        description: The metadata template that will be bound to the path
+        required: true
+        type: string 
+      - name: required
+        in: query
+        description: Whether the template is required or not
+        required: false
+        type: boolean
+    post:
+      tags:
+        - template management
+      summary: Bind the specified template to the specified path
+      description: Bind the specified template to the specified path
+      operationId: bindTemplateToPath
+      responses:
+        '204':
+          description: Metadata template bound to path
+  /resolver/unbindTemplateFromPath:
+    parameters:
+      - name: irodsPath
+        in: query
+        description: The path from which the template will be unbound
+        required: true
+        type: string
+      - name: templateUuid
+        in: query
+        description: The metadata template that will be unbound from the path
+        required: true
+        type: string 
+    post:
+      tags:
+        - template management
+      summary: Unbind the specified template from the specified path
+      description: Unbind the specified template from the specified path
+      operationId: unbindTemplate
+      responses:
+        '204':
+          description: Metadata template unbound from path
+  /validator/validateElement:
+    post:
+      tags:
+        - validation
+      summary: Validate the supplied metadata element
+      description: Validated the supplied metadata element
+      operationId: validateElement
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: body
+          description: Metadata element to be validated
+          required: true
+          schema:
+            $ref: '#/definitions/RestMetadataTemplateElement'
+      responses:
+        '200':
+          description: Metadata element validated
+          schema:
+            $ref: '#/definitions/ValidationReturn'      
+  /validator/validateTemplate:
+    post:
+      tags:
+        - validation
+      summary: Validate the supplied metadata template
+      description: Validated the supplied metadata template
+      operationId: validateTemplate
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: body
+          description: Metadata template to be validated
+          required: true
+          schema:
+            $ref: '#/definitions/RestMetadataTemplate'
+      responses:
+        '200':
+          description: Metadata template validated
+          schema:
+            $ref: '#/definitions/ValidationReturnList'          
+  /exporter/saveMetadataElementOnIrodsObject:
+    post:
+      tags:
+        - exporter
+      summary: Save the supplied metadata element onto the specified iRODS object
+      description: Save the supplied metadata element onto the specified iRODS object
+      operationId: saveElementToSystemMetadataOnObject
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: body
+          description: Metadata element to be exported
+          required: true
+          schema:
+            $ref: '#/definitions/RestMetadataTemplateElement'
+        - name: irodsPath
+          in: query
+          description: The path to the iRODS object to which the metadata element will be saved
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Metadata element exported
+  /exporter/saveMetadataTemplateOnIrodsObject:
+    post:
+      tags:
+        - exporter
+      summary: Save the supplied metadata template onto the specified iRODS object
+      description: Save the supplied metadata template onto the specified iRODS object
+      operationId: saveTemplateToSystemMetadataOnObject
+      consumes:
+        - application/json
+        - application/xml
+      produces:
+        - application/json
+        - application/xml
+      parameters:
+        - in: body
+          name: body
+          description: Metadata template to be exported
+          required: true
+          schema:
+            $ref: '#/definitions/RestMetadataTemplate'
+        - name: irodsPath
+          in: query
+          description: The path to the iRODS object to which the metadata template will be saved
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Metadata template exported           
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
 definitions:
   MetadataTemplateList:
     type: object
@@ -192,7 +393,7 @@ definitions:
     properties:
       uuid:
         type: string
-        description: uuid for the tamplate
+        description: uuid for the template
       name:
         type: string
         description: display name of the template
@@ -334,3 +535,32 @@ definitions:
         description: >-
           milliseconds to connect to iRODS and get a response from the
           perspective of the mid-tier service
+  ValidationReturn:
+    type: object
+    properties:
+      returnEnum:
+        description: contains the result of validation on the element
+        type: array
+        items:
+          type: string
+          enum:
+            - SUCCESS
+            - VALUE_NOT_EQUAL
+            - BAD_TYPE
+            - VALUE_IS_REQUIRED
+            - SINGLE_VALUE_LIST_PROVIDED
+            - VALUE_NOT_IN_LIST
+            - VALUE_NOT_IN_RANGE
+            - REGEX_SYNTAX_ERROR
+            - REGEX_FAILED
+            - BAD_REF
+            - NOT_VALIDATED
+  ValidationReturnList:
+    type: object
+    properties:
+      validationReturnList:
+        type: array
+        description: Results of validation on the template
+        items:
+          $ref: '#/definitions/ValidationReturn'
+        
