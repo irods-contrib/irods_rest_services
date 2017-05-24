@@ -193,17 +193,17 @@ paths:
       tags:
         - query
         - template management
-      summary: Retrieve the metadata template specified by templateName
-      description: Retrieve the metadata template specified by name
+      summary: Retrieve the metadata templates specified by templateName
+      description: Retrieve the metadata templates specified by name
       operationId: findTemplateByName
       produces:
         - application/json
         - application/xml
       responses:
         '200':
-          description: Metadata template retrieved
+          description: List of metadata templates retrieved
           schema:
-            $ref: '#/definitions/RestMetadataTemplate'
+            $ref: '#/definitions/MetadataTemplateList'
   /resolver/bindTemplateToPath:
     parameters:
       - name: irodsPath
@@ -357,19 +357,7 @@ paths:
       responses:
         '204':
           description: Metadata template exported           
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+          
 definitions:
   MetadataTemplateList:
     type: object
